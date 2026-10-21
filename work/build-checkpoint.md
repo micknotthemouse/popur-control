@@ -14,19 +14,9 @@
 - GitHub ops: `node tools/gh.mjs <cmd>`.
 - To set secrets from a setup code: `node tools/receive-handoff.mjs <POPUR1.code>`.
 
-**Pending from user:**
-1. Open the app on their phone, sign in, add it to the home screen.
-2. Settings → History tracking → "Turn on history tracking" → copy the code and paste it into chat. Claude then runs `receive-handoff`, which sets the secrets and dispatches the first run.
-3. After that first run, say whether the Popur phone app is still signed in.
+**Pending from user:** sign in on the phone; tap Settings → History tracking → "Turn on history tracking" and paste the setup code into chat (Claude then runs `receive-handoff`); after the first collector run, say whether the Popur phone app is still signed in.
 
-**Open risks** (all unverified against the real account):
-- Whether a Popur login evicts other sessions.
-- Whether GitHub Actions IPs can log in.
-- Whether MQTT subscribe works.
-- Whether a clean increments `worknum`.
-- What `lastworknum` means.
-- `rubbish` values other than 2.
-- The 60-day schedule auto-disable (bot commits to `data` plus a monthly enable call; the page shows a stopped-tracking link).
+**Open risks:** unverified on the real account: whether a login evicts other sessions, whether GitHub Actions IPs can log in, whether MQTT subscribe works, whether a clean bumps `worknum`, what `lastworknum` means, and `rubbish` values other than 2. Also the 60-day schedule auto-disable (mitigated by bot commits, a monthly enable call and a stopped-tracking link in the page).
 
 Measured: the live page reaches the real Popur API from the browser (a fake-account login was rejected cleanly, code 20005). One collector run on GitHub succeeded and created the `data` branch.
 
