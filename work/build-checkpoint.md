@@ -1,6 +1,6 @@
 # Build checkpoint — popur-control
 
-## 2026-10-20 — v1 live, waiting for the user's first sign-in
+## 2026-10-21 — tracking live on the real account
 
 **Running:**
 - Live app: https://micknotthemouse.github.io/popur-control/ (Pages from `main` `/docs`, commit 4c28ae6 and later).
@@ -14,10 +14,12 @@
 - GitHub ops: `node tools/gh.mjs <cmd>`.
 - To set secrets from a setup code: `node tools/receive-handoff.mjs <POPUR1.code>`.
 
-**Pending from user:** sign in on the phone; tap Settings → History tracking → "Turn on history tracking" and paste the setup code into chat (Claude then runs `receive-handoff`); after the first collector run, say whether the Popur phone app is still signed in.
+**Pending from user:** say whether the official Popur phone app is still signed in after the first collector run (2026-10-21 05:39 UTC).
 
 **Open risks:** unverified on the real account: whether a login evicts other sessions, whether GitHub Actions IPs can log in, whether MQTT subscribe works, whether a clean bumps `worknum`, what `lastworknum` means, and `rubbish` values other than 2. Also the 60-day schedule auto-disable (mitigated by bot commits, a monthly enable call and a stopped-tracking link in the page).
 
 Measured: the live page reaches the real Popur API from the browser (a fake-account login was rejected cleanly, code 20005). One collector run on GitHub succeeded and created the `data` branch.
 
-**Next step:** when the user pastes a setup code, run `node tools/receive-handoff.mjs <code>`, watch the run with `node tools/gh.mjs runs micknotthemouse/popur-control 1`, then check `status/gha.json` for `loginOk` and `insights.fields`. After about a week of data, decide `LW_MODE` and the reset time (decisions D-2, D-6).
+**Next step:** confirm phone-app sign-in status; check the next runs use the cached token (`insights.cacheUsed` true, logins stay at 1/day); after about a week, read `data` to decide `LW_MODE`, the reset time, and whether `switch` or `run` means paused (decisions D-2, D-6).
+
+

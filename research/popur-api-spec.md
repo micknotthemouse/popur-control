@@ -199,3 +199,16 @@ Risks:
 - Collector gaps of 10 to 30 minutes and dropped runs are normal. Counts are approximate.
 - A public repo exposes usage history. A private repo on Free limits polling to every 30 minutes and still needs Pages on a public repo (or Pro, unclear).
 - The 60-day disable on public repos needs a PAT-based re-enable or a manual nudge.
+
+## 9. Day-1 findings from the real account (2026-10-21, first collector run)
+
+- **Login from GitHub Actions works:** `loginOk: true`. The token cache is written to `session/gha.bin`.
+- **`deviceinfo/info` keys:**
+  - Location: `City`, `Country`, `District`, `Province`, `nationcode`.
+  - Identity: `_id`, `devid`, `homeid`, `userid`, `userids`, `serverId`, `secretkey`.
+  - Display: `dev_name`, `home_name`, `pic`, `has_new_name`, `active_enname`, `model`, `access`.
+  - Time: `create_at`, `last_notice_time`, `time`.
+  - Device state: `isonline`, `lastworknum`, `worknum`, `rubbish`, `run`, `switch`.
+- **There is no `manualmode` field** on this unit, so the app's "paused" state reads as unknown. `switch` (seen as 0) and `run` (seen as 0) are candidates; to be learned.
+- **First values:** `worknum` 2, `lastworknum` 25, `rubbish` 1 (bin had room, so 1 means not full), `isonline` 1.
+- **`secretkey`** is excluded from all stored data by the sensitive-key rule. Only the key names are in public insights.

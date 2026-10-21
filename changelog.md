@@ -23,3 +23,17 @@
   - whether a clean increments the counter;
   - what `lastworknum` means;
   - whether logins evict other sessions.
+
+## 2026-10-21
+
+- **Setup handoff worked:**
+  - Secrets set: email, password hash and cache key.
+  - First real collector run: login OK from GitHub Actions, one device found, baseline history line written.
+- **Measured on the real box:**
+  - Bin value 1 means it has room.
+  - `worknum` was 2 and `lastworknum` 25.
+  - There is no `manualmode` field, so the paused state is unknown in the app.
+- **Unverified:**
+  - Token-cache reuse on later runs.
+  - Whether the phone app was signed out.
+  - Clean and MQTT from the page with the real account.
