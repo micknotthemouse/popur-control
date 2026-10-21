@@ -6,4 +6,20 @@
   - Measured: the Popur REST API allows CORS `*`.
   - No history endpoint was found among about 30 probed paths.
 - **Design done:** 3 approaches were compared, then judged and skeptic-reviewed. The final spec is `work/design-final.md`.
-- **Build:** in progress.
+- **Build v1 implemented:**
+  - Web app: `docs/`, a PWA with a strict CSP.
+  - Shared libraries: `docs/lib/`.
+  - History collector and its schedule: `collector/` and `.github/workflows/collect.yml`.
+  - Setup tools for the laptop: `tools/`.
+  - Mock Popur cloud for testing: `test/mock-server.mjs`.
+- **Measured** (local mock only):
+  - 77 unit, collector and tool tests passed.
+  - 20 of 20 end-to-end browser checks passed in headless Edge.
+  - Every colour contrast check passed.
+- **Published:** commit `4c28ae6` pushed to the public repo, and GitHub Pages enabled from `main` `/docs`.
+- **Unverified:** everything that needs the real Popur account:
+  - login from the browser and from GitHub Actions;
+  - MQTT subscribe;
+  - whether a clean increments the counter;
+  - what `lastworknum` means;
+  - whether logins evict other sessions.
