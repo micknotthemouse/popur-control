@@ -1,25 +1,89 @@
 {
  "v": 1,
  "src": "gha",
- "since": 1792554794,
+ "since": 1792561171,
  "run": {
-  "t": 1792554794,
-  "ok": null,
-  "n": 1,
+  "t": 1792561171,
+  "ok": 1792561171,
+  "n": 2,
   "fails": 0,
-  "err": {
-   "t": 1792554794,
-   "kind": "setup"
+  "err": null
+ },
+ "devices": {
+  "ac77d808f1ba": {
+   "pt": 1792561171,
+   "last": {
+    "t": 1792561171,
+    "pv": null,
+    "w": 2,
+    "lw": 25,
+    "r": 1,
+    "bf": 0,
+    "on": 1,
+    "m": null
+   },
+   "binPending": 0,
+   "binFullSince": null
   }
  },
- "devices": {},
  "insights": {
-  "fields": [],
-  "homeFields": [],
-  "rubbishSeen": [],
-  "small": {},
-  "logins": {},
-  "loginOk": null,
+  "fields": [
+   "City",
+   "Country",
+   "District",
+   "Province",
+   "_id",
+   "access",
+   "active_enname",
+   "create_at",
+   "dev_name",
+   "devid",
+   "has_new_name",
+   "home_name",
+   "homeid",
+   "isonline",
+   "last_notice_time",
+   "lastworknum",
+   "model",
+   "nationcode",
+   "pic",
+   "rubbish",
+   "run",
+   "secretkey",
+   "serverId",
+   "switch",
+   "time",
+   "userid",
+   "userids",
+   "worknum"
+  ],
+  "homeFields": [
+   "_id",
+   "createuser",
+   "currentUserRole",
+   "devicelist",
+   "name",
+   "nationcode",
+   "roomlist",
+   "server",
+   "serverid",
+   "userlist"
+  ],
+  "rubbishSeen": [
+   1
+  ],
+  "small": {
+   "isonline": 1,
+   "lastworknum": 25,
+   "rubbish": 1,
+   "run": 0,
+   "switch": 0,
+   "worknum": 2
+  },
+  "logins": {
+   "2026-10-21": 1
+  },
+  "loginOk": true,
   "cacheUsed": false
  },
  "keepalive": {
