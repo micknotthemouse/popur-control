@@ -1,0 +1,8 @@
+secrets/
+node_modules/
+tools/node_modules/
+work/screenshots/
+work/tmp/
+test/.tmp/
+.env
+*.pem

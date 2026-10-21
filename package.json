@@ -1,0 +1,16 @@
+{
+  "name": "popur-control",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/**/*test.mjs\"",
+    "mock": "node test/mock-server.mjs",
+    "fixtures": "node test/fixtures/make-history.mjs",
+    "e2e": "node test/e2e.mjs",
+    "contrast": "node test/contrast.mjs",
+    "icons": "node test/make-icons.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

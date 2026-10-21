@@ -1,0 +1,34 @@
+name: Collect litter box history
+
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Collect
+        run: node collector/collect.mjs
+        env:
+          POPUR_EMAIL: ${{ secrets.POPUR_EMAIL }}
+          POPUR_PASSWORD: ${{ secrets.POPUR_PASSWORD }}
+          POPUR_PASSWORD_MD5: ${{ secrets.POPUR_PASSWORD_MD5 }}
+          POPUR_CACHE_KEY: ${{ secrets.POPUR_CACHE_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

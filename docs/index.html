@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cloud.popur.com.cn wss://cloud.popur.com.cn https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0D10" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Popur">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Popur</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="offline-banner" class="banner" role="status" hidden>You're offline. Showing what was saved on this phone.</div>
+
+<div class="app">
+  <header class="top" id="top">
+    <div class="top-row">
+      <h1 class="title"><span id="box-name">Litter box</span></h1>
+      <button id="device-btn" class="icon-btn" type="button" aria-label="Choose a box" hidden><span class="ico" data-icon="chevron-down"></span></button>
+      <span class="grow"></span>
+      <button id="settings-btn" class="icon-btn" type="button" aria-label="Settings" aria-haspopup="dialog"><span class="ico" data-icon="gear"></span></button>
+    </div>
+    <div class="top-meta">
+      <span id="status-pill" class="pill" data-tone="neutral"><span class="dot" aria-hidden="true"></span><span id="status-text">Loading</span></span>
+      <span id="live-dot" class="live" hidden><span class="dot" aria-hidden="true"></span>Live</span>
+      <button id="updated-btn" class="link-btn" type="button">Updated just now</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="api-banner" class="notice" role="status" hidden>
+      <span id="api-banner-text"></span>
+      <button id="api-retry" class="link-btn" type="button">Retry now</button>
+    </div>
+
+    <section id="evicted-card" class="card notice-card" aria-labelledby="evicted-title" hidden>
+      <h2 id="evicted-title" class="card-title">Signed in somewhere else</h2>
+      <p class="muted">Your Popur account was signed in again somewhere else, such as the Popur app. This page stopped signing back in so the two don't keep pushing each other out.</p>
+      <button id="evicted-signin" class="btn primary" type="button">Sign in again</button>
+    </section>
+
+    <section id="login-card" class="card login" aria-labelledby="login-title" hidden>
+      <h2 id="login-title" class="card-title">Sign in to Popur</h2>
+      <p id="login-lead" class="muted">Use the same email and password as the Popur app.</p>
+      <form id="login-form" novalidate>
+        <label class="field" for="login-email"><span>Email</span></label>
+        <input id="login-email" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" required>
+        <label class="field" for="login-password"><span>Password</span></label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        <div class="row-switch">
+          <span id="keep-label">Keep me signed in</span>
+          <button id="keep-signed-in" class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="keep-label"></button>
+        </div>
+        <p id="login-error" class="error" role="alert" hidden></p>
+        <button id="login-submit" class="btn primary" type="submit">Sign in</button>
+        <p class="fine">Your password goes only to Popur. If you stay signed in, a scrambled (hashed) copy is kept on this phone.</p>
+      </form>
+    </section>
+
+    <section id="bin-hero" class="hero" data-state="loading" aria-labelledby="hero-title">
+      <div id="hero-icon" class="hero-icon" aria-hidden="true"></div>
+      <div class="hero-body" aria-live="polite">
+        <p class="hero-kicker">Waste bin</p>
+        <h2 id="hero-title" class="hero-title">Checking the bin</h2>
+        <p id="hero-sub" class="hero-sub"></p>
+        <p id="hero-note" class="hero-note" hidden></p>
+      </div>
+    </section>
+
+    <section id="paused-chip" class="chip-row" hidden>
+      <span class="ico" data-icon="pause"></span>
+      <span class="chip-text">Auto-clean is paused</span>
+      <button id="resume-btn" class="link-btn" type="button">Resume</button>
+    </section>
+
+    <section id="today-card" class="card" aria-labelledby="today-title">
+      <h2 id="today-title" class="card-label">Today</h2>
+      <div class="today-grid">
+        <div class="today-main">
+          <p id="today-n" class="today-n">&ndash;</p>
+          <p id="today-label" class="today-label">visits today</p>
+          <p id="today-note" class="fine">counted from cleanings</p>
+        </div>
+        <ul class="facts">
+          <li id="today-last"></li>
+          <li id="today-usual"></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="usage-card" class="card" aria-labelledby="usage-title">
+      <div class="card-head">
+        <h2 id="usage-title" class="card-label">Usage</h2>
+        <div id="range-switch" class="segmented" role="radiogroup" aria-label="Time range">
+          <button id="range-7" type="button" role="radio" aria-checked="true" data-range="7">7 days</button>
+          <button id="range-30" type="button" role="radio" aria-checked="false" data-range="30">30 days</button>
+        </div>
+      </div>
+
+      <div id="usage-setup" class="state-block" hidden>
+        <h3 class="state-title">History tracking isn't set up yet</h3>
+        <p class="muted">Turn it on and a small helper records every visit around the clock, even when this page is closed.</p>
+        <button id="setup-open-usage" class="btn primary" type="button">Turn on history tracking</button>
+      </div>
+      <div id="usage-empty" class="state-block" hidden>
+        <h3 class="state-title">Your chart starts filling today</h3>
+        <p id="usage-empty-text" class="muted">Tracking has just begun.</p>
+      </div>
+      <div id="usage-error" class="state-block" hidden>
+        <h3 class="state-title">Couldn't load history</h3>
+        <button id="history-retry" class="btn quiet" type="button">Retry</button>
+      </div>
+
+      <div id="usage-chart" class="chart-host"></div>
+      <p id="chart-legend" class="fine legend" hidden>
+        <span class="key"><i class="swatch swatch-hatch"></i>Hatched: day not fully tracked</span>
+        <span class="key"><i class="swatch swatch-dot"></i>Bin was full</span>
+      </p>
+
+      <div id="day-panel" class="day-panel" hidden>
+        <div class="day-head">
+          <button id="day-prev" class="icon-btn" type="button" aria-label="Previous day"><span class="ico" data-icon="chevron-left"></span></button>
+          <div class="day-title">
+            <p id="day-name" class="day-name"></p>
+            <p id="day-sum" class="fine"></p>
+          </div>
+          <button id="day-next" class="icon-btn" type="button" aria-label="Next day"><span class="ico" data-icon="chevron-right"></span></button>
+          <button id="day-close" class="icon-btn" type="button" aria-label="Close day details"><span class="ico" data-icon="close"></span></button>
+        </div>
+        <div id="day-events"></div>
+      </div>
+
+      <section id="hours-section" class="sub">
+        <h3 class="sub-title">Typical times</h3>
+        <div id="hours-chart" class="chart-host" hidden></div>
+        <p id="hours-empty" class="empty-note">Needs a week of data</p>
+      </section>
+
+      <section id="activity-section" class="sub">
+        <h3 class="sub-title">Recent activity</h3>
+        <div id="activity"></div>
+      </section>
+    </section>
+
+    <section id="trust-row" class="trust" data-tone="neutral">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="trust-text"></span>
+      <a id="tracking-link" class="trust-link" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
+    </section>
+  </main>
+
+  <div id="dock" class="dock">
+    <div class="dock-inner">
+      <p id="clean-hint" class="clean-hint" role="status" hidden></p>
+      <div id="clean-wrap" class="clean-wrap">
+        <button id="clean-btn" class="clean-btn" type="button" aria-describedby="clean-reason">
+          <svg id="clean-ring" class="ring" aria-hidden="true" focusable="false" hidden><rect x="1.5" y="1.5" rx="31" ry="31" pathLength="100"></rect></svg>
+          <span class="ico" data-icon="sparkle"></span>
+          <span id="clean-label">Clean now</span>
+        </button>
+      </div>
+      <p id="clean-reason" class="clean-reason" hidden></p>
+
+      <section id="progress-card" class="progress" aria-labelledby="progress-title" hidden>
+        <div class="progress-head">
+          <span id="progress-spinner" class="spinner" aria-hidden="true"></span>
+          <h2 id="progress-title" class="progress-title">Sending</h2>
+        </div>
+        <ol id="progress-steps" class="steps">
+          <li id="step-sending" data-state="todo"><span class="step-dot"></span><span>Sending</span></li>
+          <li id="step-sent" data-state="todo"><span class="step-dot"></span><span>Sent</span></li>
+          <li id="step-cleaning" data-state="todo"><span class="step-dot"></span><span>Cleaning</span></li>
+          <li id="step-done" data-state="todo"><span class="step-dot"></span><span>Done</span></li>
+        </ol>
+        <p id="progress-text" class="progress-text" role="status" aria-live="polite"></p>
+        <button id="progress-dismiss" class="btn quiet" type="button" hidden>OK</button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" popover="manual" role="status" aria-live="polite" hidden>
+  <span id="toast-text"></span>
+  <button id="toast-action" class="toast-action" type="button" hidden></button>
+</div>
+
+<dialog id="settings-sheet" class="sheet" aria-labelledby="settings-title">
+  <div class="sheet-head">
+    <h2 id="settings-title" class="sheet-title">Settings</h2>
+    <button id="settings-close" class="icon-btn" type="button" aria-label="Close settings"><span class="ico" data-icon="close"></span></button>
+  </div>
+  <div class="sheet-body">
+    <section id="sec-control" class="group" aria-labelledby="sec-control-h">
+      <h3 id="sec-control-h" class="group-title">Box</h3>
+      <div class="row">
+        <div class="row-text">
+          <p id="pause-label" class="row-title">Pause auto-cleaning</p>
+          <p class="fine">Stops the box cleaning by itself after visits. You can still start a clean yourself.</p>
+        </div>
+        <button id="pause-switch" class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="pause-label"></button>
+      </div>
+      <button id="refresh-btn" class="row row-btn" type="button"><span class="ico" data-icon="refresh"></span><span>Refresh now</span></button>
+    </section>
+
+    <section id="sec-devices" class="group" aria-labelledby="sec-devices-h" hidden>
+      <h3 id="sec-devices-h" class="group-title">Your boxes</h3>
+      <div id="device-list" role="radiogroup" aria-label="Choose a box"></div>
+    </section>
+
+    <section id="sec-history" class="group" aria-labelledby="sec-history-h">
+      <h3 id="sec-history-h" class="group-title">History tracking</h3>
+      <p id="tracking-summary" class="row-pad"></p>
+      <dl id="tracking-facts" class="kv"></dl>
+      <div class="row-pad" id="tracking-actions">
+        <button id="setup-open" class="btn primary" type="button">Turn on history tracking</button>
+        <a id="setup-fallback-link" class="row-link" href="#" target="_blank" rel="noopener noreferrer">Set it up on GitHub instead<span class="ico" data-icon="external"></span></a>
+      </div>
+    </section>
+
+    <section id="sec-appearance" class="group" aria-labelledby="sec-appearance-h">
+      <h3 id="sec-appearance-h" class="group-title">Appearance</h3>
+      <div class="row-pad">
+        <div id="theme-switch" class="segmented wide" role="radiogroup" aria-label="Appearance">
+          <button id="theme-system" type="button" role="radio" aria-checked="true" data-theme-choice="system">System</button>
+          <button id="theme-light" type="button" role="radio" aria-checked="false" data-theme-choice="light">Light</button>
+          <button id="theme-dark" type="button" role="radio" aria-checked="false" data-theme-choice="dark">Dark</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-account" class="group" aria-labelledby="sec-account-h">
+      <h3 id="sec-account-h" class="group-title">Account</h3>
+      <div id="account-signedin">
+        <div class="row">
+          <div class="row-text">
+            <p class="row-title">Signed in as</p>
+            <p id="account-email" class="fine"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-text"><p id="keep-label-2" class="row-title">Keep me signed in</p></div>
+          <button id="keep-switch-settings" class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="keep-label-2"></button>
+        </div>
+        <button id="account-details-btn" class="row row-btn" type="button"><span class="ico" data-icon="user"></span><span>Account details</span></button>
+        <pre id="account-details" class="code" hidden></pre>
+        <button id="signout-btn" class="row row-btn danger-text" type="button"><span class="ico" data-icon="signout"></span><span>Sign out</span></button>
+      </div>
+      <p id="account-signedout" class="row-pad muted" hidden>You're not signed in.</p>
+    </section>
+
+    <section id="sec-about" class="group" aria-labelledby="sec-about-h">
+      <h3 id="sec-about-h" class="group-title">About</h3>
+      <p class="row-pad">This is an unofficial app. It talks to Popur's cloud the same way the Popur app does, but it isn't made by or connected to Popur.</p>
+      <p class="row-pad">Usage history is stored in a public GitHub repository. It contains counts and times only, never names, emails or passwords.</p>
+      <div class="row-pad"><a id="repo-link" class="row-link" href="#" target="_blank" rel="noopener noreferrer">View the project on GitHub<span class="ico" data-icon="external"></span></a></div>
+    </section>
+
+    <details id="advanced" class="group fold">
+      <summary>Advanced</summary>
+      <details id="diagnostics" class="fold inner">
+        <summary>Diagnostics</summary>
+        <div class="diag">
+          <h4>Box reading (private details hidden)</h4>
+          <pre id="diag-deviceinfo" class="code"></pre>
+          <h4>Home details (private details hidden)</h4>
+          <pre id="diag-home" class="code"></pre>
+          <h4>Tracking helper notes</h4>
+          <pre id="diag-insights" class="code"></pre>
+          <h4>Bin values seen</h4>
+          <p id="diag-binnote" class="fine"></p>
+          <h4>Live connection</h4>
+          <p id="diag-mqtt" class="fine"></p>
+          <h4>Activity log</h4>
+          <pre id="diag-log" class="code log"></pre>
+          <button id="diag-copy" class="btn quiet" type="button">Copy report</button>
+          <p id="diag-copy-status" class="fine" role="status"></p>
+        </div>
+      </details>
+    </details>
+    <p class="fine foot">Popur control, unofficial</p>
+  </div>
+</dialog>
+
+<dialog id="setup-dialog" class="sheet" aria-labelledby="setup-title">
+  <div class="sheet-head">
+    <h2 id="setup-title" class="sheet-title">Turn on history tracking</h2>
+    <button id="setup-close" class="icon-btn" type="button" aria-label="Close"><span class="ico" data-icon="close"></span></button>
+  </div>
+  <div class="sheet-body">
+    <div id="setup-pw" hidden>
+      <p class="row-pad">Enter your Popur password once to make the setup code. It stays on this phone.</p>
+      <div class="row-pad">
+        <label class="field" for="setup-password"><span>Popur password</span></label>
+        <input id="setup-password" type="password" autocomplete="current-password">
+        <p id="setup-pw-error" class="error" role="alert" hidden></p>
+        <button id="setup-make" class="btn primary" type="button">Make setup code</button>
+      </div>
+    </div>
+    <div id="setup-code-view" hidden>
+      <p class="row-pad">Paste this code into your chat with Claude. It's locked so only your laptop can open it.</p>
+      <div class="row-pad">
+        <textarea id="setup-code" class="code-box" readonly rows="5" spellcheck="false" aria-label="Setup code"></textarea>
+        <button id="setup-copy" class="btn primary big" type="button"><span class="ico" data-icon="copy"></span><span id="setup-copy-label">Copy setup code</span></button>
+        <p id="setup-copy-status" class="fine" role="status"></p>
+        <a id="setup-fallback" class="row-link" href="#" target="_blank" rel="noopener noreferrer">Set it up on GitHub instead<span class="ico" data-icon="external"></span></a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="confirm-dialog" class="sheet small" aria-labelledby="confirm-title">
+  <div class="sheet-body">
+    <h2 id="confirm-title" class="sheet-title pad">Start a clean?</h2>
+    <p class="row-pad">Make sure your cat is out of the box.</p>
+    <div class="row-pad btn-row">
+      <button id="confirm-cancel" class="btn quiet" type="button">Cancel</button>
+      <button id="confirm-go" class="btn primary" type="button">Clean now</button>
+    </div>
+  </div>
+</dialog>
+
+<noscript><p class="banner">This page needs JavaScript to show your litter box.</p></noscript>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "popur-control-tools",
+  "private": true,
+  "type": "module",
+  "description": "Laptop-side setup tools (not deployed). Run npm install here once.",
+  "dependencies": {
+    "libsodium-wrappers": "0.7.15"
+  }
+}
