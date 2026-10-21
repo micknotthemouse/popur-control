@@ -3,15 +3,15 @@
  "src": "gha",
  "since": 1792561171,
  "run": {
-  "t": 1792561171,
-  "ok": 1792561171,
-  "n": 2,
+  "t": 1792562012,
+  "ok": 1792562012,
+  "n": 3,
   "fails": 0,
   "err": null
  },
  "devices": {
   "ac77d808f1ba": {
-   "pt": 1792561171,
+   "pt": 1792562012,
    "last": {
     "t": 1792561171,
     "pv": null,
@@ -84,7 +84,7 @@
    "2026-10-21": 1
   },
   "loginOk": true,
-  "cacheUsed": false
+  "cacheUsed": true
  },
  "keepalive": {
   "t": 1792554794,
