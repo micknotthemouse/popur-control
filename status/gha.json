@@ -3,20 +3,20 @@
  "src": "gha",
  "since": 1792561171,
  "run": {
-  "t": 1794739356,
-  "ok": 1794739356,
-  "n": 750,
+  "t": 1794754330,
+  "ok": 1794754330,
+  "n": 751,
   "fails": 0,
   "err": null
  },
  "devices": {
   "ac77d808f1ba": {
-   "pt": 1794739356,
+   "pt": 1794754330,
    "last": {
-    "t": 1794726732,
-    "pv": 1794726465,
-    "w": 0,
-    "lw": 42,
+    "t": 1794754330,
+    "pv": 1794739356,
+    "w": 1,
+    "lw": 43,
     "r": 1,
     "bf": 0,
     "on": 1,
@@ -74,11 +74,11 @@
   ],
   "small": {
    "isonline": 1,
-   "lastworknum": 42,
+   "lastworknum": 43,
    "rubbish": 1,
    "run": 0,
    "switch": 0,
-   "worknum": 0
+   "worknum": 1
   },
   "logins": {},
   "loginOk": true,
