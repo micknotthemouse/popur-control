@@ -3,15 +3,15 @@
  "src": "gha",
  "since": 1792561171,
  "run": {
-  "t": 1795153055,
-  "ok": 1795153055,
-  "n": 1188,
+  "t": 1795153959,
+  "ok": 1795153959,
+  "n": 1189,
   "fails": 0,
   "err": null
  },
  "devices": {
   "ac77d808f1ba": {
-   "pt": 1795153055,
+   "pt": 1795153959,
    "last": {
     "t": 1795132360,
     "pv": 1795131458,
@@ -80,9 +80,11 @@
    "switch": 0,
    "worknum": 1
   },
-  "logins": {},
+  "logins": {
+   "2026-11-20": 1
+  },
   "loginOk": true,
-  "cacheUsed": true
+  "cacheUsed": false
  },
  "keepalive": {
   "t": 1795147645,
